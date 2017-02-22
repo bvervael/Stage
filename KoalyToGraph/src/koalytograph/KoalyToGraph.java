@@ -25,6 +25,12 @@ public class KoalyToGraph extends Application {
         stage.setTitle("Oxya");
         stage.setScene(scene);
         stage.show();
+        
+        
+        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("test");
+        });
+
     }
 
     /**
