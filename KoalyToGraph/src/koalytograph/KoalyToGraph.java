@@ -32,18 +32,6 @@ public class KoalyToGraph extends Application {
         
         LineChart graph = (LineChart) scene.lookup("#graph");
         ListView listView = (ListView) scene.lookup("#listView");
-        
-//        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-//            double width = scene.getWidth();
-//            graph.setPrefWidth(width-214);
-//            listView.setLayoutX(width-214);
-//        });
-//        
-//        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-//            double height = scene.getHeight();
-//            graph.setPrefHeight(height-56);
-//            listView.setPrefHeight(height-100);
-//        });
 
         scene.widthProperty().addListener(new ChangeListener<Number>() {
             @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {

@@ -5,6 +5,7 @@
  */
 package koalytograph;
 
+import java.awt.Checkbox;
 import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import org.apache.poi.ss.usermodel.Row;
@@ -55,12 +57,18 @@ public class FXMLDocumentController implements Initializable {
     private LineChart graph;
     
     @FXML
+    private CheckBox checkbox;
+    
+    @FXML
     private void handleButtonAction(ActionEvent event) {
         String word=textField.getText().toLowerCase();
         textField.setText("");
         listView.setItems(list);
+        wordCount(word,checkbox.isSelected());
+    }
+    
+    public void wordCount(String word, Boolean exclusive){
         int counter=0;
-        
         XYChart.Series series = new XYChart.Series();
         series.setName(word);
         
@@ -112,21 +120,21 @@ public class FXMLDocumentController implements Initializable {
                     colNum ++;
                     switch (cell.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
-                            System.out.print(cell.getStringCellValue());
+                            //System.out.print(cell.getStringCellValue());
                             importData[colNum][rowNum]= cell.getStringCellValue();
                             break;
                         case Cell.CELL_TYPE_BOOLEAN:
-                            System.out.print(cell.getBooleanCellValue());
+                            //System.out.print(cell.getBooleanCellValue());
                             importData[colNum][rowNum]= cell.getBooleanCellValue() ? "true" : "false";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
-                            System.out.print(cell.getNumericCellValue());
+                            //System.out.print(cell.getNumericCellValue());
                             importData[colNum][rowNum]= ""+ cell.getNumericCellValue();
                             break;
                     }
-                    System.out.print(" - ");
+                    //System.out.print(" - ");
                 }
-                System.out.println();
+                //System.out.println();
             }
             fileIn.close();
         } catch (Exception ex) {

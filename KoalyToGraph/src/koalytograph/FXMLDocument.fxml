@@ -24,5 +24,6 @@
       </rotationAxis>
     </LineChart>
     <ListView fx:id="listView" layoutX="640.0" layoutY="70.0" prefHeight="358.0" prefWidth="200.0" />
+    <CheckBox fx:id="checkbox" layoutX="362.0" layoutY="23.0" mnemonicParsing="false" text="Exclusive" />
   </children>
 </AnchorPane>
