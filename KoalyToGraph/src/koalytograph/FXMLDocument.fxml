@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="456.0" prefWidth="854.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="koalytograph.FXMLDocumentController">
+  <children>
+    <Button fx:id="button" layoutX="266.0" layoutY="20.0" onAction="#handleButtonAction" text="Add" />
+    <TextField fx:id="textField" layoutX="50.0" layoutY="20.0" prefWidth="200.0" />
+    <LineChart fx:id="graph" layoutX="0.0" layoutY="56.0" prefWidth="640.0">
+      <xAxis>
+        <CategoryAxis side="BOTTOM" />
+      </xAxis>
+      <yAxis>
+        <NumberAxis side="LEFT" />
+      </yAxis>
+    </LineChart>
+    <ListView fx:id="listView" layoutX="640.0" layoutY="70.0" prefHeight="358.0" prefWidth="200.0" />
+  </children>
+</AnchorPane>
