@@ -6,9 +6,13 @@
 package koalytograph;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 /**
@@ -26,11 +30,34 @@ public class KoalyToGraph extends Application {
         stage.setScene(scene);
         stage.show();
         
+        LineChart graph = (LineChart) scene.lookup("#graph");
+        ListView listView = (ListView) scene.lookup("#listView");
         
-        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println("test");
-        });
+//        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+//            double width = scene.getWidth();
+//            graph.setPrefWidth(width-214);
+//            listView.setLayoutX(width-214);
+//        });
+//        
+//        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+//            double height = scene.getHeight();
+//            graph.setPrefHeight(height-56);
+//            listView.setPrefHeight(height-100);
+//        });
 
+        scene.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                graph.setPrefWidth((double)newSceneWidth-214);
+                listView.setLayoutX((double)newSceneWidth-214);
+            }
+        });
+        
+        scene.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                graph.setPrefHeight((double)newSceneHeight-56);
+                listView.setPrefHeight((double)newSceneHeight-100);
+            }
+        });
     }
 
     /**

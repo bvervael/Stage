@@ -43,7 +43,7 @@ public class FXMLDocumentController implements Initializable {
     private double width=854,height=456;
     
     @FXML
-    private Button button,but;
+    private Button button;
     
     @FXML
     private TextField textField;
@@ -88,20 +88,6 @@ public class FXMLDocumentController implements Initializable {
             graph.getData().add(series);
         }
         System.out.println(word + " komt in " + counter + " titels voor.");
-    }
-    
-    @FXML
-    private void resize(ActionEvent event) {
-       if(button.getScene().getWidth()!=width||button.getScene().getHeight()!=height){
-           graph.setPrefWidth(button.getScene().getWidth()-214);
-           graph.setPrefHeight(button.getScene().getHeight()-56);
-           listView.setLayoutX(button.getScene().getWidth()-214);
-           listView.setPrefHeight(button.getScene().getHeight()-100);
-           this.height=button.getScene().getHeight();
-           this.width=button.getScene().getWidth();
-           System.out.println("Resize");
-       }
-       System.out.println("niet resized");
     }
     
     @Override
