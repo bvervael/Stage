@@ -2,13 +2,14 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" disable="false" prefHeight="456.0" prefWidth="854.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="koalytograph.FXMLDocumentController">
+<AnchorPane id="AnchorPane" fx:id="pane" disable="false" minHeight="300.0" minWidth="600.0" prefHeight="456.0" prefWidth="854.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="koalytograph.FXMLDocumentController">
   <children>
     <Button fx:id="button" layoutX="266.0" layoutY="20.0" onAction="#handleButtonAction" text="Add" />
     <TextField fx:id="textField" layoutX="50.0" layoutY="20.0" prefWidth="200.0" />
@@ -24,7 +25,7 @@
       </rotationAxis>
     </LineChart>
     <ListView fx:id="listView" layoutX="640.0" layoutY="70.0" prefHeight="358.0" prefWidth="200.0" />
-    <CheckBox fx:id="checkbox" layoutX="362.0" layoutY="23.0" mnemonicParsing="false" text="Exclusive" />
     <Button fx:id="del" layoutX="741.0" layoutY="23.0" mnemonicParsing="false" onAction="#actionDelete" prefWidth="92.0" text="Delete" />
+    <ChoiceBox fx:id="choiceBox" layoutX="349.0" layoutY="24.0" prefWidth="200.0" />
   </children>
 </AnchorPane>
