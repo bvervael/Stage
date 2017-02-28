@@ -77,12 +77,15 @@ public class FXMLDocumentController implements Initializable {
         int selectedIdx = listView.getSelectionModel().getSelectedIndex();
         if (selectedIdx != -1) {
             String word = (String) listView.getSelectionModel().getSelectedItem();
+            word = word.split("\\(")[0];
+            word = word.substring(0, word.length()-1);
             listView.getItems().remove(selectedIdx);
             graph.getData().remove(graphs.get(word));
+            graphs.remove(word);
         }
     }
 
-    public void wordCount(String word, Boolean addToList) {
+    public int wordCount(String word, Boolean addToList) {
         String w1 = word, w2;
         String s = (String) choiceBox.getValue();
         int counter = 0,totaal=0;
@@ -113,18 +116,17 @@ public class FXMLDocumentController implements Initializable {
                 if (importData[col][i] != null && datum[i] != null) {
                     totaal ++;
                     if (importData[col][i].toLowerCase().contains(w1)) {
-                        //if(months.containsKey(datum[i])){
                         months.put(datum[i], months.get(datum[i]) + 1);
                         counter++;
                     }
                 }
             }
             if (counter != 0) {
-                if (addToList) {
-                    System.out.println(totaal);
-                    int percent =(int) counter*100/totaal;
-                    list.add(w2+" ("+percent+"%)");
+                int percent =(int) counter*100/totaal;
+                if (!addToList) {
+                    list.remove(w2);
                 }
+                list.add(w2+" ("+percent+"%)");
                 months.keySet().forEach((it) -> {
                     series.getData().add(new XYChart.Data(it.toString().substring(0, 7), months.get(it)));
                 });
@@ -136,31 +138,40 @@ public class FXMLDocumentController implements Initializable {
         } else {
             System.out.println("staat al in grafiek");
         }
+        return counter;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         choiceBox.setItems(FXCollections.observableArrayList("Title", "Terms", "Repl/Last exchange"));
+        //Make cell's editable
         choiceBox.getSelectionModel().selectFirst();
         listView.setEditable(true);
         listView.setCellFactory(TextFieldListCell.forListView());
         listView.setOnEditCommit(new EventHandler<ListView.EditEvent<String>>() {
             @Override
             public void handle(ListView.EditEvent<String> t) {
-                String word = (String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase());
-                if (graphs.containsKey(listView.getItems().set(t.getIndex(), t.getNewValue()))) {
-                    listView.getItems().set(t.getIndex(), word);
+                String oldWord = (String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase());
+                String word = oldWord.split("\\(")[0];
+                word = word.substring(0, word.length()-1);
+                String newWord = (String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase());
+                if (graphs.containsKey(newWord)) {
+                    listView.getItems().set(t.getIndex(), oldWord);
                 } else {
-                    graph.getData().remove(graphs.get(word));
-                    graphs.remove(word);
-                    wordCount((String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase()), false);
+                    if(wordCount((String) newWord, false)>0){
+                        graph.getData().remove(graphs.get(word));
+                        graphs.remove(word);
+                    }else{
+                        listView.getItems().set(t.getIndex(), oldWord);
+                    }
                 }
             }
 
         });
+        //Read in the full excel file to matrix
         int rowNum = 0, colNum = 0;
-        try ( //Create Workbook from Existing File
-                InputStream fileIn = new FileInputStream("C:\\tmp\\ticket.xls")) {
+        try ( 
+            InputStream fileIn = new FileInputStream("C:\\tmp\\ticketHubo.xls")) {
             Workbook wb = WorkbookFactory.create(fileIn);
             Sheet sheet = wb.getSheetAt(0);
 
@@ -178,15 +189,12 @@ public class FXMLDocumentController implements Initializable {
                     colNum++;
                     switch (cell.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
-                            //System.out.print(cell.getStringCellValue());
                             importData[colNum][rowNum] = cell.getStringCellValue();
                             break;
                         case Cell.CELL_TYPE_BOOLEAN:
-                            //System.out.print(cell.getBooleanCellValue());
                             importData[colNum][rowNum] = cell.getBooleanCellValue() ? "true" : "false";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
-                            //System.out.print(cell.getNumericCellValue());
                             importData[colNum][rowNum] = "" + cell.getNumericCellValue();
                             break;
                     }
