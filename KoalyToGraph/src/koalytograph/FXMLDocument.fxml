@@ -12,7 +12,7 @@
 <AnchorPane id="AnchorPane" fx:id="pane" disable="false" minHeight="300.0" minWidth="600.0" prefHeight="456.0" prefWidth="854.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="koalytograph.FXMLDocumentController">
   <children>
     <Button fx:id="button" layoutX="266.0" layoutY="20.0" onAction="#handleButtonAction" text="Add" />
-    <TextField fx:id="textField" layoutX="50.0" layoutY="20.0" prefWidth="200.0" />
+    <TextField fx:id="textField" layoutX="48.0" layoutY="21.0" prefWidth="200.0" />
     <LineChart fx:id="graph" cache="true" cacheHint="DEFAULT" layoutX="0.0" layoutY="56.0" prefWidth="640.0" scaleY="1.0" translateX="1.0" translateY="1.0" translateZ="1.0">
       <xAxis>
         <CategoryAxis side="BOTTOM" />
@@ -25,7 +25,7 @@
       </rotationAxis>
     </LineChart>
     <ListView fx:id="listView" layoutX="640.0" layoutY="70.0" prefHeight="358.0" prefWidth="200.0" />
-    <Button fx:id="del" layoutX="741.0" layoutY="23.0" mnemonicParsing="false" onAction="#actionDelete" prefWidth="92.0" text="Delete" />
-    <ChoiceBox fx:id="choiceBox" layoutX="349.0" layoutY="24.0" prefWidth="200.0" />
+    <Button fx:id="del" layoutX="740.0" layoutY="20.0" mnemonicParsing="false" onAction="#actionDelete" prefWidth="92.0" text="Delete" />
+    <ChoiceBox fx:id="choiceBox" layoutX="352.0" layoutY="20.0" prefWidth="200.0" />
   </children>
 </AnchorPane>

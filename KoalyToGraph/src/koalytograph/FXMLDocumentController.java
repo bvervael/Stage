@@ -10,6 +10,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,9 +49,11 @@ public class FXMLDocumentController implements Initializable {
     private Map<LocalDate, Integer> months;
     private Map<String, XYChart.Series> graphs = new HashMap<>();
     private List<LocalDate> allMonths = new ArrayList();
+    private HashMap<String,ArrayList> groups = new HashMap<>();
+    private DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
 
     @FXML
-    private Button button;
+    private Button button,button2;
 
     @FXML
     private TextField textField;
@@ -69,9 +72,18 @@ public class FXMLDocumentController implements Initializable {
         String word = textField.getText().toLowerCase();
         textField.setText("");
         listView.setItems(list);
-        wordCount(word, true);
+        String[] toks = word.split(":");
+        if(toks.length>1){
+            ArrayList<String> items = new ArrayList<String>(Arrays.asList(toks[1].split(",")));
+            groups.put(toks[0],items);
+        }else{
+            ArrayList<String> items = new ArrayList<>();
+            items.add(toks[0]);
+            groups.put(toks[0],items);
+        }
+        wordCount(toks[0], true);
     }
-
+    
     @FXML
     private void actionDelete(ActionEvent event) {
         int selectedIdx = listView.getSelectionModel().getSelectedIndex();
@@ -103,6 +115,7 @@ public class FXMLDocumentController implements Initializable {
         }
         if (word.isEmpty()) {
             w2 = "All tickets";
+            w1 = "";
         } else {
             w2 = w1;
         }
@@ -112,10 +125,22 @@ public class FXMLDocumentController implements Initializable {
             for (LocalDate date : allMonths) {
                 months.put(date, 0);
             }
+            ArrayList <String> words = groups.get(w1); 
             for (int i = 24; i < importData[0].length; i++) {
                 if (importData[col][i] != null && datum[i] != null) {
                     totaal ++;
-                    if (importData[col][i].toLowerCase().contains(w1)) {
+                    Boolean b=false;
+                    if (w1 == "") {
+                        b=true;
+                    } else {
+                        for (String woord : words) {
+                            ArrayList<String> items = new ArrayList<String>(Arrays.asList(woord.split("&&")));
+                            if(findAnd(importData[col][i].toLowerCase(),items)){
+                                b=true;
+                            }
+                        }
+                    }
+                    if (b) {
                         months.put(datum[i], months.get(datum[i]) + 1);
                         counter++;
                     }
@@ -139,6 +164,27 @@ public class FXMLDocumentController implements Initializable {
             System.out.println("staat al in grafiek");
         }
         return counter;
+    }
+    
+    public Boolean findAnd(String zin, ArrayList list){
+        Boolean returnVal = true;
+        if(list.isEmpty()){
+            return true;
+        }else{
+            Boolean wordIn=true;
+            String w = (String) list.get(0);
+            if (w.charAt(0) == '-') {
+                w = w.substring(1, w.length());
+                wordIn = false;
+            }
+            if(zin.contains(w)==wordIn){
+                list.remove(0);
+                returnVal=findAnd(zin,list);
+            }else{
+                return false;
+            }
+        }
+        return returnVal;
     }
 
     @Override
@@ -171,7 +217,7 @@ public class FXMLDocumentController implements Initializable {
         //Read in the full excel file to matrix
         int rowNum = 0, colNum = 0;
         try ( 
-            InputStream fileIn = new FileInputStream("C:\\tmp\\ticketHubo.xls")) {
+            InputStream fileIn = new FileInputStream("C:\\tmp\\staples.xls")) {
             Workbook wb = WorkbookFactory.create(fileIn);
             Sheet sheet = wb.getSheetAt(0);
 
@@ -206,7 +252,7 @@ public class FXMLDocumentController implements Initializable {
         } catch (Exception ex) {
             System.out.println("FOUT: " + ex);
         }
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+        
         datum = new LocalDate[importData[0].length];
         for (int u = 24; u < importData[0].length; u++) {
             if (importData[13][u] != null) {
