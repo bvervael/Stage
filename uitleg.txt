@@ -1,0 +1,20 @@
+Moest je morgen zelf nog wat willen toevoegen of zoeken ofzo het is vrij simpel.
+Eerst krijg je een window en je kiest hier gewoon de file die je wil gebruiken als input
+Zoeken op 1 woord: 
+        typ het woord in het zoekbalkje en klik "add"
+Zoeken op groep (OR):
+        typ in het zoekbalkje "groepsnaam:woord1,woord2,woord3,..." en klik "add".
+        Let op typ geen spaties (tenzei je daar op wil zoeken vb woord1 = "ping to").
+Zoeken op groep (AND):
+        typ in het zoekbalkje "groepsnaam:woord1&&woord2&&woord3&&..." en klik "add".
+Zoeken zonder woord:
+        type in het zoekbalkje "-" en dan het woord die niet mag voorkomen en klik op "add"
+
+Een combinatie van bovenstaande is mogelijk vb:
+        Total_without_network:monitoring&&-network,supervision&&-network
+
+Om het totaal aantal te tonen klik "add" zonder iets in het zoekvak te typen.
+Om te wissen selecteer in de rechter kolom en klik "delete".
+In de Choice box kun je selecteren in welk veld van de excel hij moet gaan zoeken. 
+
+

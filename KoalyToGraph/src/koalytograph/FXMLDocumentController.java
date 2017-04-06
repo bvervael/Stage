@@ -146,6 +146,9 @@ public class FXMLDocumentController implements Initializable {
                     }
                 }
             }
+            LocalDate l = LocalDate.now();
+            l = LocalDate.parse(l.toString().substring(0, 7) + "-01", format);
+            months.remove(l);
             if (counter != 0) {
                 int percent =(int) counter*100/totaal;
                 if (!addToList) {

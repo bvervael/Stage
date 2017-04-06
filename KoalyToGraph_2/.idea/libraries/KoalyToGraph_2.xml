@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="KoalyToGraph_2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/KoalyToGraph_2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
