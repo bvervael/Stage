@@ -5,16 +5,11 @@
  */
 package koalytograph;
 
+import java.io.IOException;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -25,28 +20,19 @@ public class KoalyToGraph extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        //Second window
+        Parent root2;
+        try {
+            root2 = FXMLLoader.load(getClass().getResource("FXMLFileSelecter.fxml"));
+            Stage stage2 = new Stage();
+            stage2.setTitle("Choose excel file");
+            stage2.setScene(new Scene(root2));
+            stage2.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
         
-        Scene scene = new Scene(root);
-        stage.setTitle("Oxya");
-        stage.setScene(scene);
-        stage.show();
-        
-        LineChart graph = (LineChart) scene.lookup("#graph");
-        ListView listView = (ListView) scene.lookup("#listView");
-        Button del = (Button) scene.lookup("#del");
-        AnchorPane pane= (AnchorPane) scene.lookup("#pane");
-        
-        scene.widthProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) -> {
-            graph.setPrefWidth((double)newSceneWidth-214);
-            listView.setLayoutX((double)newSceneWidth-214);
-            del.setLayoutX((double)newSceneWidth-113);
-        });
-        
-        scene.heightProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) -> {
-            graph.setPrefHeight((double)newSceneHeight-56);
-            listView.setPrefHeight((double)newSceneHeight-100);
-        });
     }
 
     /**

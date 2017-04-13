@@ -36,6 +36,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -51,9 +53,10 @@ public class FXMLDocumentController implements Initializable {
     private List<LocalDate> allMonths = new ArrayList();
     private HashMap<String,ArrayList> groups = new HashMap<>();
     private DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+    private File file;
 
     @FXML
-    private Button button,button2;
+    private Button button,del;
 
     @FXML
     private TextField textField;
@@ -67,8 +70,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ChoiceBox choiceBox;
 
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
+    private void b1Action(ActionEvent event) {
         String word = textField.getText().toLowerCase();
         textField.setText("");
         listView.setItems(list);
@@ -84,8 +86,7 @@ public class FXMLDocumentController implements Initializable {
         wordCount(toks[0], true);
     }
     
-    @FXML
-    private void actionDelete(ActionEvent event) {
+    private void b2Action(ActionEvent event) {
         int selectedIdx = listView.getSelectionModel().getSelectedIndex();
         if (selectedIdx != -1) {
             String word = (String) listView.getSelectionModel().getSelectedItem();
@@ -95,6 +96,10 @@ public class FXMLDocumentController implements Initializable {
             graph.getData().remove(graphs.get(word));
             graphs.remove(word);
         }
+    }
+    
+    public FXMLDocumentController(File file){
+        this.file = file;
     }
 
     public int wordCount(String word, Boolean addToList) {
@@ -220,9 +225,9 @@ public class FXMLDocumentController implements Initializable {
         //Read in the full excel file to matrix
         int rowNum = 0, colNum = 0;
         try ( 
-            InputStream fileIn = new FileInputStream("C:\\tmp\\staples.xls")) {
-            Workbook wb = WorkbookFactory.create(fileIn);
-            Sheet sheet = wb.getSheetAt(0);
+            FileInputStream fileIn = new FileInputStream(file)) {
+            XSSFWorkbook wb = new XSSFWorkbook (fileIn);
+            XSSFSheet sheet = wb.getSheetAt(0);
 
             importData = new String[100][sheet.getLastRowNum() + 1];
             Cell cell;
@@ -268,5 +273,17 @@ public class FXMLDocumentController implements Initializable {
                 datum[u] = null;
             }
         }
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                b1Action(event);
+            }
+        });
+        del.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                b2Action(event);
+            }
+        });
     }
 }
