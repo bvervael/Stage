@@ -16,7 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
+import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -78,7 +78,7 @@ public class FXMLFileSelecterController implements Initializable {
         stage.setScene(scene);
         stage.show();
         
-        LineChart graph = (LineChart) scene.lookup("#graph");
+        StackedAreaChart graph = (StackedAreaChart) scene.lookup("#graph");
         ListView listView = (ListView) scene.lookup("#listView");
         Button del = (Button) scene.lookup("#del");
         AnchorPane pane= (AnchorPane) scene.lookup("#pane");

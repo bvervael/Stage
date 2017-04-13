@@ -24,7 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.LineChart;
+import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -32,10 +32,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -65,7 +62,7 @@ public class FXMLDocumentController implements Initializable {
     private ListView listView;
 
     @FXML
-    private LineChart graph;
+    private StackedAreaChart graph;
 
     @FXML
     private ChoiceBox choiceBox;
@@ -73,8 +70,12 @@ public class FXMLDocumentController implements Initializable {
     private void b1Action(ActionEvent event) {
         String word = textField.getText().toLowerCase();
         textField.setText("");
+        addWord(word,true);
+    }
+    
+    private int addWord(String s,boolean b){
         listView.setItems(list);
-        String[] toks = word.split(":");
+        String[] toks = s.split(":");
         if(toks.length>1){
             ArrayList<String> items = new ArrayList<String>(Arrays.asList(toks[1].split(",")));
             groups.put(toks[0],items);
@@ -83,7 +84,7 @@ public class FXMLDocumentController implements Initializable {
             items.add(toks[0]);
             groups.put(toks[0],items);
         }
-        wordCount(toks[0], true);
+        return wordCount(toks[0], b);
     }
     
     private void b2Action(ActionEvent event) {
@@ -212,7 +213,7 @@ public class FXMLDocumentController implements Initializable {
                 if (graphs.containsKey(newWord)) {
                     listView.getItems().set(t.getIndex(), oldWord);
                 } else {
-                    if(wordCount((String) newWord, false)>0){
+                    if(addWord(newWord, false)>0){
                         graph.getData().remove(graphs.get(word));
                         graphs.remove(word);
                     }else{
@@ -273,12 +274,14 @@ public class FXMLDocumentController implements Initializable {
                 datum[u] = null;
             }
         }
+        
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 b1Action(event);
             }
         });
+        
         del.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
