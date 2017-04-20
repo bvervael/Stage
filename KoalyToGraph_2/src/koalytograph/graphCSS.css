@@ -1,0 +1,32 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19-apr-2017, 8:54:46
+    Author     : cmaricou
+*/
+
+.chart-legend {
+  -fx-font-size: 2.0em;
+}
+
+.chart-legend-item-symbol{
+   -fx-background-radius: 100px;
+    -fx-padding: 20px;
+}
+
+.chart-legend { 
+    -fx-border-radius: 5px;
+    -fx-border-width: 3px;
+    -fx-border-color: black;
+}
+
+.list-cell 
+{
+  -fx-font-size: 18pt;
+}
+
+
+

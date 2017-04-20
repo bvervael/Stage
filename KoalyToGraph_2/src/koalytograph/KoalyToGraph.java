@@ -28,6 +28,7 @@ public class KoalyToGraph extends Application {
             stage2.setTitle("Choose excel file");
             stage2.setScene(new Scene(root2));
             stage2.show();
+            stage2.setResizable(false);
         }
         catch (IOException e) {
             e.printStackTrace();

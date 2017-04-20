@@ -24,13 +24,19 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -53,7 +59,7 @@ public class FXMLDocumentController implements Initializable {
     private File file;
 
     @FXML
-    private Button button,del;
+    private Button button,del,save,open;
 
     @FXML
     private TextField textField;
@@ -65,9 +71,9 @@ public class FXMLDocumentController implements Initializable {
     private LineChart graph;
 
     @FXML
-    private ChoiceBox choiceBox;
+    private ChoiceBox choiceBox,queries;
 
-    private void b1Action(ActionEvent event) {
+    private void b1Action() {
         String word = textField.getText().toLowerCase();
         textField.setText("");
         addWord(word,true);
@@ -160,7 +166,8 @@ public class FXMLDocumentController implements Initializable {
                 if (!addToList) {
                     list.remove(w2);
                 }
-                list.add(w2+" ("+percent+"%)");
+                w2 = w2+" ("+percent+"%)";
+                list.add(w2);
                 months.keySet().forEach((it) -> {
                     series.getData().add(new XYChart.Data(it.toString().substring(0, 7), months.get(it)));
                 });
@@ -172,6 +179,10 @@ public class FXMLDocumentController implements Initializable {
         } else {
             System.out.println("staat al in grafiek");
         }
+        
+        //test
+        
+        
         return counter;
     }
     
@@ -207,15 +218,14 @@ public class FXMLDocumentController implements Initializable {
             @Override
             public void handle(ListView.EditEvent<String> t) {
                 String oldWord = (String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase());
-                String word = oldWord.split("\\(")[0];
-                word = word.substring(0, word.length()-1);
+                
                 String newWord = (String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase());
-                if (graphs.containsKey(newWord)) {
+                if (newWord.isEmpty() || graphs.containsKey(newWord)) {
                     listView.getItems().set(t.getIndex(), oldWord);
                 } else {
                     if(addWord(newWord, false)>0){
-                        graph.getData().remove(graphs.get(word));
-                        graphs.remove(word);
+                        graph.getData().remove(graphs.get(oldWord));
+                        graphs.remove(oldWord);
                     }else{
                         listView.getItems().set(t.getIndex(), oldWord);
                     }
@@ -278,7 +288,7 @@ public class FXMLDocumentController implements Initializable {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                b1Action(event);
+                b1Action();
             }
         });
         
@@ -286,6 +296,15 @@ public class FXMLDocumentController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 b2Action(event);
+            }
+        });
+
+        textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    b1Action();
+                }
             }
         });
     }

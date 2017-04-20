@@ -70,13 +70,16 @@ public class FXMLFileSelecterController implements Initializable {
     private void continu(ActionEvent event) throws IOException {
         Stage stage = new Stage();
         FXMLDocumentController controller = new FXMLDocumentController(file);
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));  
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXMLDocument2.fxml"));  
         fxmlLoader.setController(controller);
         Parent root = (Parent)fxmlLoader.load();   
+        root.getStylesheets().add("koalytograph/graphCSS.css");
         Scene scene = new Scene(root);
         stage.setTitle("Oxya");
         stage.setScene(scene);
         stage.show();
+        stage.setMinHeight(400);
+        stage.setMinWidth(960);
         
         LineChart graph = (LineChart) scene.lookup("#graph");
         ListView listView = (ListView) scene.lookup("#listView");
