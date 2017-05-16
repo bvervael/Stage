@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" fx:id="pane" disable="false" minHeight="450.0" minWidth="940.0" prefHeight="482.0" prefWidth="940.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <Button fx:id="button" text="Add" AnchorPane.leftAnchor="266.0" AnchorPane.topAnchor="20.0" />
+    <TextField fx:id="textField" prefHeight="27.000091552734375" prefWidth="200.00009999999747" AnchorPane.leftAnchor="48.0" AnchorPane.topAnchor="20.0" />
+    <StackedAreaChart fx:id="graph" animated="true" prefHeight="397.0" prefWidth="570.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="370.0" AnchorPane.topAnchor="56.0">
+      <xAxis>
+        <CategoryAxis side="BOTTOM">
+          <tickLabelFont>
+            <Font size="20.0" fx:id="x1" />
+          </tickLabelFont>
+        </CategoryAxis>
+      </xAxis>
+      <yAxis>
+        <NumberAxis fx:id="yas" side="LEFT" tickLabelFont="$x1" />
+      </yAxis>
+      <rotationAxis>
+        <Point3D z="1.0" />
+      </rotationAxis>
+    </StackedAreaChart>
+    <ListView fx:id="listView" prefHeight="334.5" prefWidth="360.0" AnchorPane.bottomAnchor="53.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="68.5" />
+    <Button fx:id="del" mnemonicParsing="false" prefWidth="79.0" text="Delete" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
+    <ChoiceBox fx:id="choiceBox" prefWidth="185.0" AnchorPane.leftAnchor="341.0" AnchorPane.topAnchor="20.0" />
+    <Button fx:id="save" mnemonicParsing="false" prefWidth="120.0" text="Save Query" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="10.0" />
+    <Button fx:id="open" mnemonicParsing="false" prefWidth="120.0" text="Open query" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="248.0" />
+    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="168.0" text="\% of all tickets" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="201.0" AnchorPane.rightAnchor="571.0">
+      <font>
+        <Font size="22.0" />
+      </font>
+    </Label>
+  </children>
+</AnchorPane>
