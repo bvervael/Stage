@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.TreeMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,19 +25,19 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -44,7 +45,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
- * @author cmaricou
+ * @author bvervaele
  */
 public class FXMLDocumentController implements Initializable {
 
@@ -57,6 +58,8 @@ public class FXMLDocumentController implements Initializable {
     private HashMap<String,ArrayList> groups = new HashMap<>();
     private DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
     private File file;
+    private HashMap <String,String> saveQueries = new HashMap <>();
+   
 
     @FXML
     private Button button,del,save,open;
@@ -72,6 +75,12 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private ChoiceBox choiceBox,queries;
+    
+    @FXML
+    private AnchorPane pane;
+    
+    @FXML
+    private NumberAxis yas;
 
     private void b1Action() {
         String word = textField.getText().toLowerCase();
@@ -82,26 +91,30 @@ public class FXMLDocumentController implements Initializable {
     private int addWord(String s,boolean b){
         listView.setItems(list);
         String[] toks = s.split(":");
-        if(toks.length>1){
-            ArrayList<String> items = new ArrayList<String>(Arrays.asList(toks[1].split(",")));
-            groups.put(toks[0],items);
-        }else{
-            ArrayList<String> items = new ArrayList<>();
-            items.add(toks[0]);
-            groups.put(toks[0],items);
+        if (toks[0].equals("title")) {
+            graph.setTitle(toks[1]);
+        } else {
+            if (toks.length > 1) {
+                ArrayList<String> items = new ArrayList<String>(Arrays.asList(toks[1].split(",")));
+                groups.put(toks[0], items);
+            } else {
+                ArrayList<String> items = new ArrayList<>();
+                items.add(toks[0]);
+                groups.put(toks[0], items);
+            }
+            return wordCount(toks[0], b, s);
         }
-        return wordCount(toks[0], b);
+        return 0;
     }
     
-    private void b2Action(ActionEvent event) {
+    private void b2Action() {
         int selectedIdx = listView.getSelectionModel().getSelectedIndex();
         if (selectedIdx != -1) {
             String word = (String) listView.getSelectionModel().getSelectedItem();
-            word = word.split("\\(")[0];
-            word = word.substring(0, word.length()-1);
             listView.getItems().remove(selectedIdx);
             graph.getData().remove(graphs.get(word));
             graphs.remove(word);
+            saveQueries.remove(word);
         }
     }
     
@@ -109,7 +122,7 @@ public class FXMLDocumentController implements Initializable {
         this.file = file;
     }
 
-    public int wordCount(String word, Boolean addToList) {
+    public int wordCount(String word, Boolean addToList,String str) {
         String w1 = word, w2;
         String s = (String) choiceBox.getValue();
         int counter = 0,totaal=0;
@@ -131,8 +144,7 @@ public class FXMLDocumentController implements Initializable {
         } else {
             w2 = w1;
         }
-        if (!graphs.containsKey(w2)) {
-            XYChart.Series series = new XYChart.Series();
+        if (!alreadyInGraph(w2)) {
             months = new TreeMap<>();
             for (LocalDate date : allMonths) {
                 months.put(date, 0);
@@ -164,26 +176,38 @@ public class FXMLDocumentController implements Initializable {
             if (counter != 0) {
                 int percent =(int) counter*100/totaal;
                 if (!addToList) {
-                    list.remove(w2);
+                    list.remove(str);
                 }
                 w2 = w2+" ("+percent+"%)";
                 list.add(w2);
+                XYChart.Series series = new XYChart.Series();
                 months.keySet().forEach((it) -> {
                     series.getData().add(new XYChart.Data(it.toString().substring(0, 7), months.get(it)));
                 });
                 series.setName(w2);
                 graph.getData().add(series);
                 graphs.put(w2, series);
+                saveQueries.put(w2, str);
             }
             System.out.println(w1 + " komt in " + counter + " titels voor.");
         } else {
             System.out.println("staat al in grafiek");
         }
-        
-        //test
-        
-        
         return counter;
+    }
+    
+    public boolean alreadyInGraph(String s){
+        if(s.isEmpty()){
+            s = "All tickets";
+        }
+        for (String str : graphs.keySet()){
+            String word = str.split("\\(")[0];
+            word = word.substring(0, word.length()-1);
+            if(word.equals(s)){
+                return true;
+            }
+        }
+        return false;
     }
     
     public Boolean findAnd(String zin, ArrayList list){
@@ -218,7 +242,6 @@ public class FXMLDocumentController implements Initializable {
             @Override
             public void handle(ListView.EditEvent<String> t) {
                 String oldWord = (String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase());
-                
                 String newWord = (String) listView.getItems().set(t.getIndex(), t.getNewValue().toLowerCase());
                 if (newWord.isEmpty() || graphs.containsKey(newWord)) {
                     listView.getItems().set(t.getIndex(), oldWord);
@@ -226,6 +249,7 @@ public class FXMLDocumentController implements Initializable {
                     if(addWord(newWord, false)>0){
                         graph.getData().remove(graphs.get(oldWord));
                         graphs.remove(oldWord);
+                        saveQueries.remove(oldWord);
                     }else{
                         listView.getItems().set(t.getIndex(), oldWord);
                     }
@@ -271,7 +295,6 @@ public class FXMLDocumentController implements Initializable {
         } catch (Exception ex) {
             System.out.println("FOUT: " + ex);
         }
-        
         datum = new LocalDate[importData[0].length];
         for (int u = 24; u < importData[0].length; u++) {
             if (importData[13][u] != null) {
@@ -285,6 +308,9 @@ public class FXMLDocumentController implements Initializable {
             }
         }
         
+        
+        yas.setTickLabelFormatter(new IntegerStringConverter());
+        
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -295,10 +321,65 @@ public class FXMLDocumentController implements Initializable {
         del.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                b2Action(event);
+                b2Action(); 
             }
         });
 
+        save.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                FileChooser fileChooser = new FileChooser();
+                File existDirectory = file.getParentFile();
+                fileChooser.setInitialDirectory(existDirectory);
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text doc(*.txt)", "*.txt"));
+                fileChooser.setTitle("Save queries");
+                Stage stage = (Stage) pane.getScene().getWindow();
+                File filetmp = fileChooser.showSaveDialog(stage);
+                if (filetmp != null) {
+                    try (PrintWriter out = new PrintWriter( filetmp )){
+                        for(String s : saveQueries.keySet()){
+                            out.println(saveQueries.get(s));
+                        }
+                        out.println("title:"+graph.getTitle());
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }
+        });
+       
+        open.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                FileChooser fileChooser = new FileChooser();
+                File existDirectory = file.getParentFile();
+                fileChooser.setInitialDirectory(existDirectory);
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text doc(*.txt)", "*.txt"));
+                Stage stage = (Stage) pane.getScene().getWindow();
+                File filetmp = fileChooser.showOpenDialog(stage);
+                if (filetmp != null) {
+                    try {
+                        Scanner sc = new Scanner(filetmp);
+                        
+                        saveQueries.clear();
+                        groups.clear();
+                        list.clear();         
+                        graphs.keySet().forEach((key) -> {
+                            graph.getData().remove(graphs.get(key));
+                        });
+                        graphs.clear();
+                        
+                        while (sc.hasNext()) {
+                            addWord(sc.nextLine(),false);
+                        }
+                        sc.close();
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+                }
+            }
+        });
+        
         textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -308,4 +389,5 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
+    
 }

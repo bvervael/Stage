@@ -15,7 +15,26 @@ and open the template in the editor.
 .chart-legend-item-symbol{
    -fx-background-radius: 100px;
     -fx-padding: 20px;
+    -fx-background-color: #f9d900, #f9d900;
 }
+
+.default-color0.chart-legend-item-symbol { -fx-background-color: #f3622d, #f3622d; }
+.default-color1.chart-legend-item-symbol { -fx-background-color: #fba71b, #fba71b; }
+.default-color2.chart-legend-item-symbol { -fx-background-color: #57b757, #57b757; }
+.default-color3.chart-legend-item-symbol { -fx-background-color: #41a9c9, #41a9c9; }
+.default-color4.chart-legend-item-symbol { -fx-background-color: #4258c9, #4258c9; }
+.default-color5.chart-legend-item-symbol { -fx-background-color: #9a42c8, #9a42c8; }
+.default-color6.chart-legend-item-symbol { -fx-background-color: #c84164, #c84164; }
+.default-color7.chart-legend-item-symbol { -fx-background-color: #888888, #888888; }
+
+.default-color0.chart-series-line { -fx-stroke: #f3622d; }
+.default-color1.chart-series-line { -fx-stroke: #fba71b; }
+.default-color2.chart-series-line { -fx-stroke: #57b757; }
+.default-color3.chart-series-line { -fx-stroke: #41a9c9; }
+.default-color4.chart-series-line { -fx-stroke: #4258c9; }
+.default-color5.chart-series-line { -fx-stroke: #9a42c8; }
+.default-color6.chart-series-line { -fx-stroke: #c84164; }
+.default-color7.chart-series-line { -fx-stroke: #888888; }
 
 .chart-legend { 
     -fx-border-radius: 5px;
@@ -28,5 +47,8 @@ and open the template in the editor.
   -fx-font-size: 18pt;
 }
 
-
-
+.chart-title {
+  -fx-text-fill: black;
+  -fx-font-size: 3.0em;
+  -fx-font-weight: bold;
+}
